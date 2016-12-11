@@ -1,8 +1,8 @@
-  Microsoft Emotion Processing in Processing
-  =============
+Microsoft Emotion Processing in Processing
+=============
   
- This library for Processing (processing.org) uses Microsoft Cognitive Services to recognize emotions from images.
- It is therefore a client of Microsoft Cognitive Services. 
+This library for Processing (processing.org) uses Microsoft Cognitive Services to recognize emotions from images.
+It is therefore a client of Microsoft Cognitive Services. 
  
 
 Installation
