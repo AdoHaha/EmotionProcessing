@@ -15,19 +15,19 @@ Basic Usage
 
 1. Import the library
     ```
-    import microsoftemotionprocessing.*;
+    import emotionprocessing.*;
     ```
 
 2. Create a global variable for the main library class
     ```
-    MicrosoftEmotionProcessing emo_recog;
+    EmotionProcessing emo_recog;
     ```
 3. Initialize the library and connect to Microsoft Cognitive Services inside your `setup()`. You need
 to provide a KEY, that you can get from Microsoft (register at [https://www.microsoft.com/cognitive-services])
     ```
     void setup() {
       ...
-      emo_recog= new MicrosoftEmotionProcessing("KEY");
+      emo_recog= new EmotionProcessing("KEY");
       ...
     }
     ```

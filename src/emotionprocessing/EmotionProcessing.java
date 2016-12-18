@@ -32,7 +32,7 @@
 *  POSSIBILITY OF SUCH DAMAGE.
 *********************************************************************/
 
-package microsoftemotionprocessing;
+package emotionprocessing;
 
 import processing.core.*;
 import processing.data.FloatDict;
@@ -64,34 +64,78 @@ import java.io.File;
 import java.io.IOException;
 /**
 import EmotionRestClient.*;
-
-
-
-
-
-
-
-
-
-
- * The main library class.
+* The main library class.
  **/
-public class MicrosoftEmotionProcessing {
- public	List<RecognizeResult> result;
-public	EmotionServiceRestClient emo_recog;
-private PApplet parent;
-public MicrosoftEmotionProcessing(String key) {
+
+
+
+
+public class EmotionProcessing {
+	private	List<RecognizeResult> result;
+	private	EmotionServiceRestClient emo_recog;
+	private PApplet parent;
+	private FloatDict faceRectangle; // this will have the position of the face
+	private FloatDict emotions;
+public EmotionProcessing(String key) {
    
     emo_recog=new EmotionServiceRestClient( key);
+    faceRectangle = new FloatDict();
+
+    faceRectangle.set("x",(float)0);
+    faceRectangle.set("y",(float)0);
+    faceRectangle.set("width",(float)0);
+    faceRectangle.set("height",(float)0);
+    
+    emotions = new FloatDict();   
+
+    
+    emotions.set("anger",(float)0.0);
+    emotions.set("contempt",(float)0.0);
+    emotions.set("disgust",(float)0.0);
+    emotions.set("fear", (float)0.0);
+    emotions.set("happiness",(float)0.0);
+    emotions.set("neutral",(float)0.0);
+    emotions.set("sadness",(float)0.0);
+    emotions.set("surprise",(float)0.0);
+   
     }
+
 /**
- *returns StringDict with recognized values of emotions                     (1)
+ *returns faceRectangle dictionary with elements x y width height that can be used to draw rect
+ *around recognized face
+ */
+public FloatDict getFaceRectangle()
+{
+
+		return faceRectangle;
+
+
+}
+/**
+ *returns last recognized emotions for example:                    (1)
  * <p>
  * {"anger":7.111848E-7,"contempt":5.46429249E-8,
  * "disgust":7.002413E-8,"fear":4.01338E-7,
  * "happiness":0.9999927,"neutral":1.87778568E-7,
  * "sadness":3.40486253E-8,"surprise":5.82004441E-6}    (2)
  * here.
+ * </p>
+ */
+public FloatDict getEmotions()
+{
+	return this.emotions;
+}
+
+/**
+ *returns StringDict with recognized values of emotions (min 0.0, max 1.0)                    (1)
+ * <p>
+ * {"anger":7.111848E-7,"contempt":5.46429249E-8,
+ * "disgust":7.002413E-8,"fear":4.01338E-7,
+ * "happiness":0.9999927,"neutral":1.87778568E-7,
+ * "sadness":3.40486253E-8,"surprise":5.82004441E-6}    (2)
+ * here.
+ * </p>
+ * @param emotions 
  */
 public 	FloatDict recognizeFromCamera(PImage cam)
 {
@@ -99,8 +143,7 @@ public 	FloatDict recognizeFromCamera(PImage cam)
    //int [] cam_pixels=cam.pixels;
    BufferedImage native_image= (BufferedImage) cam.getNative();
     ByteArrayOutputStream output = new ByteArrayOutputStream();
-    FloatDict emotions = new FloatDict();
-    
+
     
     
     
@@ -110,6 +153,8 @@ public 	FloatDict recognizeFromCamera(PImage cam)
         ByteArrayInputStream inputStream = new ByteArrayInputStream(output.toByteArray());
           Gson gson = new Gson();
         try{
+         emotions = new FloatDict();
+         faceRectangle = new FloatDict();
          result=emo_recog.recognizeImage(inputStream);
          String json = gson.toJson(result);
          
@@ -128,6 +173,15 @@ public 	FloatDict recognizeFromCamera(PImage cam)
          emotions.set("neutral",(float)result.get(0).scores.neutral);
          emotions.set("sadness",(float)result.get(0).scores.sadness);
          emotions.set("surprise",(float)result.get(0).scores.surprise);
+         
+         
+         faceRectangle.set("x",(float)result.get(0).faceRectangle.left);
+         faceRectangle.set("y",(float)result.get(0).faceRectangle.top);
+         faceRectangle.set("width",(float)result.get(0).faceRectangle.width);
+         faceRectangle.set("height",(float)result.get(0).faceRectangle.height);
+         this.emotions=emotions;
+         
+         
         }catch(Exception e) {
         
         	PApplet.println(e);
