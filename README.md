@@ -8,7 +8,7 @@ It is therefore a client of Microsoft Cognitive Services.
 Installation
 ------------
 
-Just clone the repo to the `libraries` folder inside your Processing sketchbook and restart Processing.
+Just clone the repo to the `libraries` folder inside your Processing sketchbook and restart Processing. Or download from [here](./EmotionProcessing.zip)
 
 Basic Usage
 -----
